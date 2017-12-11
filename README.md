@@ -15,7 +15,7 @@ public class SomeGameObject : MonoBehaviour {
   public APIClient api;
 
   void Start () {
-    StartCoroutine (api.ApiCall( (bool success) => {
+    StartCoroutine (api.QueryCall( (bool success) => {
         if (success)
           Debug.Log( "success!");
         else

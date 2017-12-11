@@ -9,18 +9,34 @@ public class APIClient : MonoBehaviour {
 
   //not a real api url
   string apiUrl = "https://graphqlapi.com/queries";
+
   string query = @"query{
     organizations {
       id
     }
   }";
 
+  string mutation = @"mutation AddMember($input: RegistrationInput!) {
+    registration( input: $input ) {
+      contact {
+        name
+        email
+      }
+    }
+  }";
 
-  public IEnumerator ApiCall (System.Action<bool> callback) {
+  [System.Serializable]
+  private class Member {
+    public string name;
+    public string email;
+  }
 
-    var client = new GraphQLClient (apiUrl);
 
-    using( UnityWebRequest www = client.Query(query, "")) {
+  public IEnumerator QueryCall (System.Action<bool> callback) {
+
+    GraphQLClient client = new GraphQLClient (apiUrl);
+
+    using( UnityWebRequest www = client.Query(query, "", "")) {
       yield return www.Send();
 
       if (www.isError) {
@@ -28,7 +44,6 @@ public class APIClient : MonoBehaviour {
 
         callback (false);
       } else {
-
         string responseString = www.downloadHandler.text;
         JSONObject response = new JSONObject (responseString);
 
@@ -38,6 +53,31 @@ public class APIClient : MonoBehaviour {
         accesData( organizatios )
 
         callback (true);
+      }
+    }
+  }
+
+  public IEnumarator MutationCall () {
+    GraphQLClient client = new GraphQLClient (apiUrl);
+
+    Member memberInput = new Member () {
+      name = "Bob Jones",
+      email = "bob@jones.com"
+    };
+
+    string variables = @"{""input"": "+ JsonUtility.ToJson(memberInput) +" }";
+
+    using( UnityWebRequest www = client.Query(mutation, variables, "AddMember")) {
+      yield return www.Send();
+
+      if (www.isError) {
+        Debug.Log (www.error);
+        // handle error
+      } else {
+        string responseString = www.downloadHandler.text;
+        JSONObject reponse = new JSONObject (responseString);
+
+        // handle json result with JSONObject
       }
     }
   }

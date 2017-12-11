@@ -15,13 +15,15 @@ namespace GraphQL {
     [System.Serializable]
     private class GraphQLQuery {
       public string query;
-      public object variables { get; set; }
+      public string variables;
+      public string operationName
     }
 
-    public UnityWebRequest Query(string query, object variables) {
+    public UnityWebRequest Query(string query, string variables, string operationName) {
       var fullQuery = new GraphQLQuery () {
-        query = query
-        variables = variables
+        query = query,
+        variables = variables,
+        operationName = operationName
       };
 
       string json = JsonUtility.ToJson (fullQuery);
