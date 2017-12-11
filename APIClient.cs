@@ -33,7 +33,6 @@ public class APIClient : MonoBehaviour {
 
 
   public IEnumerator QueryCall (System.Action<bool> callback) {
-
     GraphQLClient client = new GraphQLClient (apiUrl);
 
     using( UnityWebRequest www = client.Query(query, "", "")) {
@@ -46,10 +45,8 @@ public class APIClient : MonoBehaviour {
       } else {
         string responseString = www.downloadHandler.text;
         JSONObject response = new JSONObject (responseString);
-
         JSONObject data = response.GetField ("data");
         JSONObject organizations = data.GetField ("organizations");
-
         accesData( organizatios )
 
         callback (true);

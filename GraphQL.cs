@@ -16,7 +16,7 @@ namespace GraphQL {
     private class GraphQLQuery {
       public string query;
       public string variables;
-      public string operationName
+      public string operationName;
     }
 
     public UnityWebRequest Query(string query, string variables, string operationName) {
